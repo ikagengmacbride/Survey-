@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="row header-row">
+        <div class="col-6"> <h2>_Surveys</h2>
+        </div>
+        <div class="col-6 text-end nav"> <a href="/">FILL OUT SURVEY</a>
+            <a href="/results">VIEW SURVEY RESULTS</a>
+        </div>
+    </div>
+
+    <h2 class="central-heading">Survey Results</h2>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% else %}
+        <div class="results-section">
+            <div class="results-row">
+                <div class="results-label">Total number of surveys :</div>
+                <div class="results-value">{{ total }}</div>
+            </div>
+            <div class="results-row">
+                <div class="results-label">Average Age :</div>
+                <div class="results-value">{{ average_age }}</div>
+            </div>
+            <div class="results-row">
+                <div class="results-label">Oldest person who participated in survey :</div>
+                <div class="results-value">{{ oldest }}</div>
+            </div>
+            <div class="results-row">
+                <div class="results-label">Youngest person who participated in survey :</div>
+                <div class="results-value">{{ youngest }}</div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-row">
+                <div class="results-label">Percentage of people who like Pizza :</div>
+                <div class="results-value">{{ pizza_percent }} % Pizza</div>
+            </div>
+            <div class="results-row">
+                <div class="results-label">Percentage of people who like Pasta :</div>
+                <div class="results-value">{{ pasta_percent }} % Pasta</div>
+            </div>
+            <div class="results-row">
+                <div class="results-label">Percentage of people who like Pap and Wors :</div>
+                <div class="results-value">{{ pap_wors_percent }} % Pap and Wors</div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-row">
+                <div class="results-label">People who like to watch movies :</div>
+                <div class="results-value">{{ movies_avg }}</div>
+            </div>
+            <div class="results-row">
+                <div class="results-label">People who like to listen to radio :</div>
+                <div class="results-value">{{ radio_avg }}</div>
+            </div>
+            <div class="results-row">
+                <div class="results-label">People who like to eat out :</div>
+                <div class="results-value">{{ eat_out_avg }}</div>
+            </div>
+            <div class="results-row">
+                <div class="results-label">People who like to watch TV :</div>
+                <div class="results-value">{{ tv_avg }}</div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>
