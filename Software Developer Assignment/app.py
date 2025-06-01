@@ -24,18 +24,22 @@ def index():
         dob_error = None # Initialize error variable for general DOB issues
         age_error = None # Initialize error variable for age validation
 
-        # Date of Birth Validation
+        # Date of Birth and Age Validation
         if dob_str:
             try:
                 dob = datetime.datetime.strptime(dob_str, '%Y-%m-%d').date()
+                
+                # Check if DOB is in the future
                 if dob > datetime.date.today():
                     dob_error = "Date of Birth cannot be in the future."
                 else:
                     # Calculate age
                     today = datetime.date.today()
                     age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-                    if age < 18:
-                        age_error = "You must be at least 18 years old to participate."
+                    
+                    # Age range validation (5 to 120 years)
+                    if age < 5 or age > 120:
+                        age_error = "Age must be between 5 and 120 years."
             except ValueError:
                 dob_error = "Invalid Date of Birth format. Please use ISO 8601 (YYYY-MM-DD)."
         else:
@@ -75,6 +79,7 @@ def index():
         return redirect(url_for('results')) # Redirect to results after successful submission
     
     # This block handles the initial GET request to '/'
+    # Initialize variables to None or empty for first load to prevent UndefinedError
     return render_template('survey.html', 
                            name=None, 
                            email=None, 
@@ -94,7 +99,7 @@ def results():
 
     total_surveys = len(survey_data)
 
-    # Age calculations
+    # Age calculations for results page
     today = datetime.date.today()
     ages = []
     for survey in survey_data:
@@ -104,14 +109,15 @@ def results():
             age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
             ages.append(age)
         except ValueError:
-            # Handle cases where DOB might be invalidly stored
+            # Handle cases where DOB might be invalidly stored or skipped
             pass
     
+    # Ensure ages list is not empty before calculating min/max/average
     average_age = round(sum(ages) / len(ages)) if ages else 0
     oldest = max(ages) if ages else 0
     youngest = min(ages) if ages else 0
 
-    # Food preferences
+    # Food preferences calculations
     pizza_count = sum(1 for s in survey_data if 'Pizza' in s['food_choices'])
     pasta_count = sum(1 for s in survey_data if 'Pasta' in s['food_choices'])
     pap_wors_count = sum(1 for s in survey_data if 'Pap and Wors' in s['food_choices'])
@@ -120,7 +126,7 @@ def results():
     pasta_percent = round((pasta_count / total_surveys) * 100) if total_surveys > 0 else 0
     pap_wors_percent = round((pap_wors_count / total_surveys) * 100) if total_surveys > 0 else 0
 
-    # Average ratings
+    # Average ratings calculations
     movies_total = sum(s['ratings']['movies'] for s in survey_data)
     radio_total = sum(s['ratings']['radio'] for s in survey_data)
     eat_out_total = sum(s['ratings']['eat_out'] for s in survey_data)
